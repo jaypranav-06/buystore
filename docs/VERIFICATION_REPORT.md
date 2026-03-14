@@ -58,7 +58,6 @@ easybuystore-nextjs/
     QUICK_START.md
     SETUP_GUIDE.md
     ADMIN_CREDENTIALS.md
-    MIGRATION.md
     BACKEND_ARCHITECTURE.md
     DISTRIBUTION_CHECKLIST.md
  app/                    All pages implemented

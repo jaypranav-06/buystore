@@ -19,7 +19,6 @@ New to EasyBuyStore? Start here:
 
 ### Technical Documentation
 - [BACKEND_ARCHITECTURE.md](BACKEND_ARCHITECTURE.md) - Technical architecture
-- [MIGRATION.md](MIGRATION.md) - PHP to Next.js migration guide
 - [MY_CONTRIBUTIONS.md](MY_CONTRIBUTIONS.md) - Development contributions
 - [01-introduction.md](01-introduction.md) - Project introduction
 

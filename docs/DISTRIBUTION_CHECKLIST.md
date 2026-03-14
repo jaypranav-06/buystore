@@ -22,7 +22,6 @@
   - [x] `QUICK_START.md`
   - [x] `SETUP_GUIDE.md`
   - [x] `ADMIN_CREDENTIALS.md`
-  - [x] `MIGRATION.md`
   - [x] `BACKEND_ARCHITECTURE.md`
   - [x] `MY_CONTRIBUTIONS.md`
   - [x] `01-introduction.md`

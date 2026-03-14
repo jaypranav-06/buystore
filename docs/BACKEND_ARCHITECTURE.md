@@ -272,7 +272,6 @@ await prisma.cartItem.delete({
 -  Prevents SQL injection (parameterized queries)
 -  Provides TypeScript types
 -  Handles database connections
--  Manages migrations
 
 ---
 

@@ -31,8 +31,6 @@ Welcome to the EasyBuyStore documentation! This guide will help you navigate all
    - Authentication flow
    - Business logic
 
-5. **[MIGRATION.md](MIGRATION.md)** - PHP to Next.js migration
-   - Migration strategy
    - Progress tracking
    - Feature comparison
    - Technical decisions
@@ -55,7 +53,6 @@ docs/
  QUICK_START.md             # 5-minute quick start guide
  SETUP_GUIDE.md             # Detailed setup instructions (Windows/Mac/Linux)
  ADMIN_CREDENTIALS.md       # Admin login credentials
- MIGRATION.md               # PHP to Next.js migration details
  BACKEND_ARCHITECTURE.md    # Technical architecture documentation
  MY_CONTRIBUTIONS.md        # Development contribution log
  01-introduction.md         # Project introduction
@@ -76,8 +73,6 @@ docs/
 ### "I want to understand the code structure"
 → Read [BACKEND_ARCHITECTURE.md](BACKEND_ARCHITECTURE.md)
 
-### "I'm migrating from PHP version"
-→ Review [MIGRATION.md](MIGRATION.md)
 
 ### "I'm using Windows and need help"
 → [SETUP_GUIDE.md](SETUP_GUIDE.md) has Windows-specific instructions
@@ -100,4 +95,3 @@ When adding new documentation:
 ---
 
 **Last Updated:** March 10, 2026
-**Project:** EasyBuyStore Next.js Migration

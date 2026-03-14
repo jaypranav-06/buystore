@@ -269,7 +269,6 @@ npm install
 npx prisma generate
 
 # Reset database (warning: deletes all data)
-npx prisma migrate reset
 ```
 
 ### Build Errors

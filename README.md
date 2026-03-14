@@ -1,230 +1,258 @@
-# EasyBuyStore E-Commerce - Next.js Migration
+# EasyBuyStore - Modern E-Commerce Platform
 
-![Status](https://img.shields.io/badge/Status-95%25%20Complete-brightgreen)
-![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
+A full-featured e-commerce platform built with Next.js 16, featuring a complete customer shopping experience and comprehensive admin dashboard.
 
-## Overview
+## Features
 
-This is the modern Next.js migration of the EasyBuyStore e-commerce website, originally built with PHP and MySQL for a university project. The migration is **95% complete** with all core features implemented including customer pages, authentication, shopping cart, checkout, order management, and admin dashboard.
+### Customer Features
+- Product browsing and search
+- Product filtering by category
+- Shopping cart management
+- Wishlist functionality
+- Secure checkout process
+- Order tracking
+- User account management
+- Responsive design for all devices
 
-## Original PHP Application Features
-
- Customer Portal:
-- Product browsing with categories
-- Shopping cart (localStorage + database sync)
-- User authentication (registration/login)
-- Product details and reviews
-- Order history
-- PayPal payment integration
-
- Admin Dashboard:
-- Product management (CRUD)
-- Order management
-- Analytics and reporting
+### Admin Features
+- Dashboard with analytics
+- Product management (CRUD operations)
 - Category management
-- Contact inquiry management
-
-## Migration Progress - 95% Complete! 
-
-###  Phase 1: Project Setup (Completed)
-- [x] Next.js 16+ with App Router
-- [x] TypeScript configuration
-- [x] Tailwind CSS setup
-- [x] Project structure created
-- [x] Environment variables configured
-
-###  Phase 2: Backend & Database (Completed)
-- [x] Prisma ORM setup with Prisma 7
-- [x] Database schema migration (10 models)
-- [x] MySQL connection configured
-- [x] API route structure implemented
-
-###  Phase 3: API Development (Completed)
-- [x] Authentication API (NextAuth.js v5)
-- [x] Products API (list, details, admin CRUD)
-- [x] Cart API (save, load, clear)
-- [x] Orders API (create, history, details)
-- [x] PayPal integration (create/capture order)
-- [x] Contact form API
-- [x] Admin APIs (products, orders)
-
-###  Phase 4: Frontend Pages (Completed)
-**Customer Portal:**
-- [x] Home page with hero, categories, featured products
-- [x] Product listing with search, filters, sorting
-- [x] Product details with reviews and ratings
-- [x] Shopping cart with quantity controls
-- [x] Checkout & PayPal payment (multi-step flow)
-- [x] Order history with tracking
-- [x] User account dashboard
-- [x] About & Contact pages
-- [x] Sign in/Sign up pages
-- [x] Categories browsing page
-
-**Admin Dashboard:**
-- [x] Dashboard overview with stats and alerts
-- [x] Product management (list, search, delete)
-- [x] Order management with status tracking
-- [x] Protected admin routes
-
-###  Phase 5: Components & State (Completed)
-- [x] Navbar with cart count and user menu
-- [x] Footer with links
-- [x] Add to Cart button component
-- [x] Admin Sidebar navigation
-- [x] State management (Zustand for cart)
-- [x] Form components with validation
-- [x] Loading & error states
-
-### ⏳ Phase 6: Testing & Deployment (Optional Enhancements)
-- [ ] Unit tests
-- [ ] E2E tests
-- [ ] Performance optimization
-- [ ] SEO optimization
-- [ ] Production deployment
-- [ ] Admin product add/edit forms
-- [ ] Admin analytics with charts
-- [ ] Review submission page
-- [ ] Promo code functionality
+- Order management and processing
+- Customer management
+- Store settings configuration
+- Staff management
+- Real-time inventory tracking
 
 ## Tech Stack
 
-**Frontend:**
-- Next.js 16.1.6 (App Router)
-- React 19.2.4
-- TypeScript 5.9
-- Tailwind CSS 4.2.1
+- **Frontend**: Next.js 16.1.6 with React 19
+- **Styling**: Tailwind CSS
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: NextAuth.js v5
+- **State Management**: Zustand
+- **Payment**: PayPal integration
+- **Build Tool**: Turbopack
+- **Language**: TypeScript
 
-**Backend:**
-- Next.js API Routes
-- Prisma ORM
-- MySQL Database
-- NextAuth.js
+## Prerequisites
 
-**Additional Tools:**
-- Zustand (State Management)
-- React Hook Form + Zod (Forms & Validation)
-- SWR (Data Fetching)
-- PayPal SDK
-
-## Database Schema
-
-The application uses the existing MySQL database with the following tables:
-- `users` - Customer accounts
-- `products` - Product catalog
-- `categories` - Product categories
-- `orders` - Order records
-- `payment_orders` - PayPal payment records
-- `order_items` - Order line items
-- `contacts` - Contact form submissions
-- `promo_codes` - Promotional codes
-- `reviews` - Product reviews
-
-##  Documentation
-
-Comprehensive setup and usage guides are available in the `docs/` folder:
-
-- **[Quick Start Guide](docs/QUICK_START.md)** - Get up and running in 5 minutes
-- **[Setup Guide](docs/SETUP_GUIDE.md)** - Detailed installation and configuration instructions
-- **[Admin Credentials](docs/ADMIN_CREDENTIALS.md)** - Default admin login information
-- **[Migration Guide](docs/MIGRATION.md)** - PHP to Next.js migration details
-
-## Getting Started
-
-### Prerequisites
 - Node.js 18+
-- MySQL database 8.0+
+- PostgreSQL database
 - npm or yarn
 
-### Quick Installation
+## Quick Start
+
+### 1. Clone the repository
 
 ```bash
-# 1. Install dependencies
+git clone https://github.com/jaypranav-06/EasyBuyStore.git
+cd EasyBuyStore
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
+```
 
-# 2. Create database
-mysql -u root -p
-CREATE DATABASE easybuystore;
+### 3. Set up environment variables
 
-# 3. Setup environment variables
-cp .env.example .env
-# Edit .env with your database credentials
+Create a `.env` file in the root directory:
 
-# 4. Initialize Prisma
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/easybuystore"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key-here"
+
+# Admin Credentials (for initial setup)
+ADMIN_EMAIL="admin@easybuystore.com"
+ADMIN_PASSWORD="your-admin-password"
+
+# PayPal (Optional)
+NEXT_PUBLIC_PAYPAL_CLIENT_ID="your-paypal-client-id"
+```
+
+### 4. Set up the database
+
+```bash
+# Generate Prisma Client
 npx prisma generate
+
+# Push database schema
 npx prisma db push
 
-# 5. Run development server
+# Seed the database (optional)
+npm run seed
+```
+
+### 5. Create admin user
+
+```bash
+npx tsx scripts/create-admin.ts
+```
+
+### 6. Start the development server
+
+```bash
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000)
-
-**For detailed setup instructions, see [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md)**
-
-## Environment Variables
-
-```env
-DATABASE_URL="mysql://root:password@localhost:3306/easybuystore"
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key"
-NEXT_PUBLIC_PAYPAL_CLIENT_ID="your-paypal-client-id"
-PAYPAL_CLIENT_SECRET="your-paypal-secret"
-```
-
-See `.env.example` for a complete template.
+Visit `http://localhost:3000` to see the application.
 
 ## Project Structure
 
 ```
 easybuystore-nextjs/
- app/
-    (customer)/         # Customer-facing pages
-    (admin)/           # Admin dashboard pages
-    api/               # API routes
-    globals.css        # Global styles
-    layout.tsx         # Root layout
-    page.tsx           # Home page
- components/            # Reusable components
- lib/                   # Utilities & helpers
- prisma/               # Prisma schema & migrations
- public/               # Static assets
- types/                # TypeScript types
+├── app/                      # Next.js app directory
+│   ├── (auth)/              # Authentication routes
+│   ├── account/             # Customer account pages
+│   ├── admin/               # Admin dashboard
+│   ├── api/                 # API routes
+│   ├── cart/                # Shopping cart
+│   ├── checkout/            # Checkout process
+│   ├── products/            # Product pages
+│   └── ...
+├── components/              # React components
+│   ├── admin/              # Admin components
+│   └── customer/           # Customer components
+├── lib/                    # Utility libraries
+│   ├── auth/              # Authentication
+│   ├── db/                # Database client
+│   └── services/          # Business logic
+├── prisma/                # Database schema
+├── public/                # Static assets
+├── scripts/               # Utility scripts
+└── docs/                  # Documentation
 ```
 
-## Key Differences from PHP Version
+## Admin Access
 
-1. **Server-Side Rendering**: Next.js provides automatic SSR and SSG for better performance
-2. **API Routes**: RESTful API using Next.js API routes instead of separate PHP files
-3. **Type Safety**: Full TypeScript support throughout the application
-4. **Modern React**: Uses React 19 with latest hooks and patterns
-5. **Optimized Images**: Next.js Image component for automatic optimization
-6. **Better DX**: Hot module replacement, fast refresh, and improved debugging
+After creating an admin user, access the admin panel at:
+```
+http://localhost:3000/admin/login
+```
 
-## Migration Strategy
+Default credentials (if using seed data):
+- Email: admin@easybuystore.com
+- Password: (as set in your .env file)
 
-The migration follows a parallel development approach:
-1. Original PHP application remains functional
-2. Next.js application is built alongside  
-3. Database schema is shared between both
-4. Gradual feature migration and testing
-5. Complete switchover once all features are migrated
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run seed` - Seed database with sample data
+- `npx prisma studio` - Open Prisma Studio
+
+## Database Schema
+
+The application uses PostgreSQL with the following main tables:
+- Users
+- Products
+- Categories
+- Orders
+- Order Items
+- Shopping Cart
+- Wishlist
+- Staff (Admin users)
+
+See `prisma/schema.prisma` for the complete schema.
+
+## Documentation
+
+Detailed documentation is available in the `/docs` directory:
+
+- [Setup Guide](docs/SETUP_GUIDE.md) - Detailed setup instructions
+- [Admin Credentials](docs/ADMIN_CREDENTIALS.md) - Admin user management
+- [Backend Architecture](docs/BACKEND_ARCHITECTURE.md) - System architecture
+- [Distribution Checklist](docs/DISTRIBUTION_CHECKLIST.md) - Deployment guide
+
+## Features in Detail
+
+### Authentication
+- Secure user authentication with NextAuth.js
+- Separate admin and customer authentication
+- Password hashing with bcrypt
+- Session management
+
+### Shopping Cart
+- Persistent cart across sessions
+- Real-time price calculations
+- Quantity management
+- Stock validation
+
+### Wishlist
+- Save products for later
+- Quick add to cart from wishlist
+- Persistent across sessions
+
+### Order Management
+- Order creation and tracking
+- Payment integration
+- Order status updates
+- Order history for customers
+
+### Admin Dashboard
+- Analytics and reporting
+- Product inventory management
+- Order processing workflow
+- Customer management tools
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import project in Vercel
+3. Configure environment variables
+4. Deploy
+
+### Other Platforms
+
+The application can be deployed to any platform that supports Next.js:
+- Netlify
+- Railway
+- AWS
+- Digital Ocean
+
+## Environment Variables Reference
+
+```env
+# Required
+DATABASE_URL=              # PostgreSQL connection string
+NEXTAUTH_URL=             # Your application URL
+NEXTAUTH_SECRET=          # Secret for NextAuth.js
+
+# Admin Setup
+ADMIN_EMAIL=              # Admin email
+ADMIN_PASSWORD=           # Admin password
+
+# Optional
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=  # PayPal Client ID
+```
 
 ## Contributing
 
-This is a university project migration. Contributions and suggestions are welcome!
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
-MIT
+This project is licensed under the MIT License.
 
-## Contact
+## Support
 
-For questions about this migration project, please refer to the original PHP application documentation or open an issue.
+For support, email jay@easybuystore.com or open an issue on GitHub.
 
----
+## Acknowledgments
 
-**Original PHP Project**: `/velvet_vogue_Ecommerce_WebPage/`  
-**Migration Start Date**: March 2026  
-**Target Completion**: 2 weeks
+- Next.js team for the amazing framework
+- Vercel for hosting
+- All contributors who helped with this project
