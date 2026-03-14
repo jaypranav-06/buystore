@@ -70,21 +70,19 @@ export default function CheckoutPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          amount: total,
+          currency: 'USD',
           items: items.map(item => ({
-            product_id: item.product_id,
-            product_name: item.product_name,
+            name: item.product_name,
             quantity: item.quantity,
-            price: item.discount_price || item.price,
+            unit_amount: item.discount_price || item.price,
           })),
-          shipping: shipping,
-          tax: tax,
-          total: total,
         }),
       });
 
       const data = await response.json();
       if (data.success) {
-        return data.orderId;
+        return data.paypal_order_id;
       } else {
         throw new Error(data.error || 'Failed to create order');
       }
@@ -97,44 +95,54 @@ export default function CheckoutPage() {
   const onApprove = async (data: any) => {
     setLoading(true);
     try {
-      const response = await fetch('/api/payments/paypal/capture-order', {
+      // First create the order in our database
+      const orderResponse = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          orderId: data.orderID,
+          items: items.map(item => ({
+            product_id: item.product_id,
+            quantity: item.quantity,
+            price: item.discount_price || item.price,
+          })),
+          total: total,
+          subtotal: subtotal,
+          shipping: shipping,
+          tax: tax,
+          shipping_name: `${shippingData.firstName} ${shippingData.lastName}`,
+          shipping_address: shippingData.address,
+          shipping_city: shippingData.city,
+          shipping_state: shippingData.state,
+          shipping_zip: shippingData.zipCode,
+          shipping_phone: shippingData.phone,
+          payment_method: 'paypal',
+          payment_status: 'pending',
         }),
       });
 
-      const result = await response.json();
-      if (result.success) {
-        // Save order to database
-        const orderResponse = await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: items.map(item => ({
-              product_id: item.product_id,
-              quantity: item.quantity,
-              price: item.discount_price || item.price,
-            })),
-            total: total,
-            shipping_address: `${shippingData.address}, ${shippingData.city}, ${shippingData.state} ${shippingData.zipCode}`,
-            payment_method: 'paypal',
-            payment_status: 'paid',
-            paypal_order_id: data.orderID,
-          }),
-        });
+      const orderData = await orderResponse.json();
+      if (!orderData.success) {
+        setError('Failed to create order');
+        return;
+      }
 
-        const orderData = await orderResponse.json();
-        if (orderData.success) {
-          setOrderId(orderData.order.order_number);
-          clearCart();
-          setStep(3);
-        } else {
-          setError('Order created but failed to save to database');
-        }
+      // Then capture the PayPal payment
+      const captureResponse = await fetch('/api/payments/paypal/capture-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          paypal_order_id: data.orderID,
+          internal_order_id: orderData.order.order_id,
+        }),
+      });
+
+      const captureResult = await captureResponse.json();
+      if (captureResult.success) {
+        setOrderId(orderData.order.order_number);
+        clearCart();
+        setStep(3);
       } else {
-        setError(result.error || 'Payment capture failed');
+        setError(captureResult.error || 'Payment capture failed');
       }
     } catch (err) {
       setError('Failed to process payment');

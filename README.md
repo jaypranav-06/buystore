@@ -28,17 +28,17 @@ A full-featured e-commerce platform built with Next.js 16, featuring a complete 
 
 - **Frontend**: Next.js 16.1.6 with React 19
 - **Styling**: Tailwind CSS
-- **Database**: PostgreSQL with Prisma ORM
+- **Database**: Supabase (PostgreSQL) with Prisma ORM
 - **Authentication**: NextAuth.js v5
 - **State Management**: Zustand
-- **Payment**: PayPal integration
+- **Payment**: PayPal REST API integration
 - **Build Tool**: Turbopack
 - **Language**: TypeScript
 
 ## Prerequisites
 
 - Node.js 18+
-- PostgreSQL database
+- Supabase account (free tier available)
 - npm or yarn
 
 ## Quick Start
@@ -56,43 +56,41 @@ cd EasyBuyStore
 npm install
 ```
 
-### 3. Set up environment variables
+### 3. Set up Supabase Database
+
+1. Go to [https://supabase.com](https://supabase.com) and create a free account
+2. Create a new project
+3. Get your connection strings from Settings > Database
+
+See [Supabase Setup Guide](docs/SUPABASE_SETUP.md) for detailed instructions.
+
+### 4. Set up environment variables
 
 Create a `.env` file in the root directory:
 
 ```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/easybuystore"
+# Database - Supabase
+DATABASE_URL="your-supabase-connection-pooling-url"
+DIRECT_URL="your-supabase-direct-connection-url"
 
 # NextAuth
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key-here"
 
-# Admin Credentials (for initial setup)
-ADMIN_EMAIL="admin@easybuystore.com"
-ADMIN_PASSWORD="your-admin-password"
-
 # PayPal (Optional)
 NEXT_PUBLIC_PAYPAL_CLIENT_ID="your-paypal-client-id"
+PAYPAL_CLIENT_SECRET="your-paypal-secret"
+PAYPAL_MODE="sandbox"
 ```
 
-### 4. Set up the database
+### 5. Push database schema to Supabase
 
 ```bash
 # Generate Prisma Client
 npx prisma generate
 
-# Push database schema
+# Push schema to Supabase
 npx prisma db push
-
-# Seed the database (optional)
-npm run seed
-```
-
-### 5. Create admin user
-
-```bash
-npx tsx scripts/create-admin.ts
 ```
 
 ### 6. Start the development server
@@ -166,6 +164,8 @@ See `prisma/schema.prisma` for the complete schema.
 
 Detailed documentation is available in the `/docs` directory:
 
+- [Supabase Setup Guide](docs/SUPABASE_SETUP.md) - Database setup with Supabase
+- [PayPal Integration](docs/PAYPAL_INTEGRATION.md) - Payment integration guide
 - [Setup Guide](docs/SETUP_GUIDE.md) - Detailed setup instructions
 - [Admin Credentials](docs/ADMIN_CREDENTIALS.md) - Admin user management
 - [Backend Architecture](docs/BACKEND_ARCHITECTURE.md) - System architecture
