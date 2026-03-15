@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import {
   LayoutDashboard,
   Package,
@@ -30,7 +31,6 @@ interface AdminSidebarProps {
 
 export default function AdminSidebar({ admin }: AdminSidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
 
   const navItems = [
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -45,9 +45,7 @@ export default function AdminSidebar({ admin }: AdminSidebarProps) {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/admin/logout', { method: 'POST' });
-      router.push('/admin/login');
-      router.refresh();
+      await signOut({ callbackUrl: '/signin' });
     } catch (error) {
       console.error('Logout error:', error);
     }

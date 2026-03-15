@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminFromCookie } from '@/lib/auth/admin';
+import { auth } from '@/lib/auth/auth';
 import prisma from '@/lib/db/prisma';
 import bcrypt from 'bcryptjs';
 import fs from 'fs';
@@ -31,15 +31,10 @@ function savePermissions(adminId: number, permissions: string[]) {
 
 // GET /api/admin/staff - Get all staff members
 export async function GET(request: NextRequest) {
-  const admin = await getAdminFromCookie();
+  const session = await auth();
 
-  if (!admin) {
+  if (!session || session.user.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  // Only admins can view staff
-  if (admin.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   try {
@@ -66,15 +61,10 @@ export async function GET(request: NextRequest) {
 
 // POST /api/admin/staff - Add new staff member
 export async function POST(request: NextRequest) {
-  const admin = await getAdminFromCookie();
+  const session = await auth();
 
-  if (!admin) {
+  if (!session || session.user.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  // Only admins can add staff
-  if (admin.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   try {

@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
-import { getAdminFromCookie } from '@/lib/auth/admin';
+import { auth } from '@/lib/auth/auth';
 
 export async function POST(request: NextRequest) {
-  const admin = await getAdminFromCookie();
+  console.log('📤 Upload API called');
+  const session = await auth();
+  console.log('📤 Session:', session ? { email: session.user.email, role: session.user.role } : 'No session');
 
-  if (!admin) {
+  if (!session || session.user.role !== 'admin') {
+    console.log('📤 Authorization failed - Unauthorized');
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  console.log('📤 Authorization passed - User is admin');
 
   try {
     const formData = await request.formData();

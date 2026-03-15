@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useCartStore } from '@/lib/stores/cart-store';
+import { useWishlistStore } from '@/lib/stores/wishlist-store';
 import { ShoppingCart, User, Menu, Search, Heart } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Navbar() {
   const { data: session } = useSession();
   const items = useCartStore((state) => state.items);
+  const wishlistCount = useWishlistStore((state) => state.count);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -16,10 +18,12 @@ export default function Navbar() {
 
   const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0);
 
-  // Only show cart count after component mounts to avoid hydration mismatch
+  // Only show counts after component mounts to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
-  }, []);
+    // Removed auto-fetching wishlist count to improve performance
+    // Count will update when user adds/removes items or visits wishlist page
+  }, [session]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -73,8 +77,13 @@ export default function Navbar() {
 
             {/* Wishlist */}
             {session && (
-              <Link href="/account/wishlist" className="text-text-primary hover:text-red-500 transition-colors p-2" title="Wishlist">
+              <Link href="/account/wishlist" className="relative text-text-primary hover:text-red-500 transition-colors p-2" title="Wishlist">
                 <Heart className="w-5 h-5" />
+                {mounted && wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    {wishlistCount}
+                  </span>
+                )}
               </Link>
             )}
 

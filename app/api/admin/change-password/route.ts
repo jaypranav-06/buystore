@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminFromCookie } from '@/lib/auth/admin';
+import { auth } from '@/lib/auth/auth';
 import prisma from '@/lib/db/prisma';
 import bcrypt from 'bcryptjs';
 
 // POST /api/admin/change-password - Change admin password
 export async function POST(request: NextRequest) {
-  const admin = await getAdminFromCookie();
+  const session = await auth();
 
-  if (!admin) {
+  if (!session || session.user.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

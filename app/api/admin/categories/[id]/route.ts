@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminFromCookie } from '@/lib/auth/admin';
+import { auth } from '@/lib/auth/auth';
 import prisma from '@/lib/db/prisma';
 
 export async function PUT(
@@ -7,9 +7,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const admin = await getAdminFromCookie();
+    const session = await auth();
 
-    if (!admin) {
+    if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -40,9 +40,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const admin = await getAdminFromCookie();
+    const session = await auth();
 
-    if (!admin) {
+    if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminFromCookie } from '@/lib/auth/admin';
+import { auth } from '@/lib/auth/auth';
 import prisma from '@/lib/db/prisma';
 
 // GET /api/admin/profile - Get admin profile
 export async function GET(request: NextRequest) {
-  const admin = await getAdminFromCookie();
+  const session = await auth();
 
-  if (!admin) {
+  if (!session || session.user.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -47,9 +47,9 @@ export async function GET(request: NextRequest) {
 
 // PUT /api/admin/profile - Update admin profile
 export async function PUT(request: NextRequest) {
-  const admin = await getAdminFromCookie();
+  const session = await auth();
 
-  if (!admin) {
+  if (!session || session.user.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

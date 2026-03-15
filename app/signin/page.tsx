@@ -22,11 +22,15 @@ export default function SignInPage() {
 
     try {
       // Use NextAuth's built-in redirect with callbackUrl
+      // This will automatically redirect on success
       await signIn('credentials', {
         email: formData.email,
         password: formData.password,
         callbackUrl: '/',
       });
+
+      // Note: Successful logins redirect automatically, so we won't reach here
+      // If we do reach here, keep loading state to avoid confusion during redirect
     } catch (err) {
       console.error('Sign in error:', err);
       setError('Invalid email or password');

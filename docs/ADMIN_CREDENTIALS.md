@@ -11,8 +11,8 @@ Your admin account has been created and is ready to use.
 ```
  Email:     admin@easybuy.com
  Username:  admin
- Password:  EasyBuy@Admin2026
- Role:      super_admin
+ Password:  admin123
+ Role:      admin
 ```
 
 ---

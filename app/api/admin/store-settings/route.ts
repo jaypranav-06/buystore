@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminFromCookie } from '@/lib/auth/admin';
+import { auth } from '@/lib/auth/auth';
 import fs from 'fs';
 import path from 'path';
 
@@ -27,9 +27,9 @@ function ensureDataDir() {
 
 // GET /api/admin/store-settings - Get store settings
 export async function GET(request: NextRequest) {
-  const admin = await getAdminFromCookie();
+  const session = await auth();
 
-  if (!admin) {
+  if (!session || session.user.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -57,9 +57,9 @@ export async function GET(request: NextRequest) {
 
 // PUT /api/admin/store-settings - Update store settings
 export async function PUT(request: NextRequest) {
-  const admin = await getAdminFromCookie();
+  const session = await auth();
 
-  if (!admin) {
+  if (!session || session.user.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

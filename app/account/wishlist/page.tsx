@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, ShoppingBag, Trash2, Star } from 'lucide-react';
 import AddToCartButton from '@/components/customer/AddToCartButton';
+import { useWishlistStore } from '@/lib/stores/wishlist-store';
 
 interface WishlistItem {
   id: number;
@@ -34,6 +35,8 @@ export default function WishlistPage() {
   const router = useRouter();
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const setWishlistCount = useWishlistStore((state) => state.setCount);
+  const decrementWishlist = useWishlistStore((state) => state.decrement);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -53,6 +56,8 @@ export default function WishlistPage() {
 
       if (data.success) {
         setWishlistItems(data.items);
+        // Update global wishlist count
+        setWishlistCount(data.items.length);
       }
     } catch (error) {
       console.error('Error fetching wishlist:', error);
@@ -69,6 +74,8 @@ export default function WishlistPage() {
 
       if (response.ok) {
         setWishlistItems(wishlistItems.filter((item) => item.id !== itemId));
+        // Update global wishlist count
+        decrementWishlist();
       } else {
         const data = await response.json();
         alert(data.error || 'Failed to remove item');

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useWishlistStore } from '@/lib/stores/wishlist-store';
 
 interface AddToWishlistButtonProps {
   productId: number;
@@ -24,6 +25,8 @@ export default function AddToWishlistButton({
   const router = useRouter();
   const [inWishlist, setInWishlist] = useState(isInWishlist);
   const [loading, setLoading] = useState(false);
+  const incrementWishlist = useWishlistStore((state) => state.increment);
+  const decrementWishlist = useWishlistStore((state) => state.decrement);
 
   const handleToggle = async () => {
     if (status === 'unauthenticated') {
@@ -33,10 +36,21 @@ export default function AddToWishlistButton({
 
     if (status === 'loading' || loading) return;
 
+    // Optimistic UI update - update immediately for better UX
+    const previousState = inWishlist;
+    setInWishlist(!inWishlist);
+
+    // Update global count optimistically
+    if (!inWishlist) {
+      incrementWishlist();
+    } else {
+      decrementWishlist();
+    }
+
     setLoading(true);
 
     try {
-      if (inWishlist) {
+      if (previousState) {
         // Remove from wishlist - we need to find the item ID first
         const response = await fetch('/api/wishlist');
         const data = await response.json();
@@ -48,12 +62,14 @@ export default function AddToWishlistButton({
               method: 'DELETE',
             });
 
-            if (deleteResponse.ok) {
-              setInWishlist(false);
-              if (onToggle) onToggle();
-            } else {
+            if (!deleteResponse.ok) {
+              // Revert on error
+              setInWishlist(true);
+              incrementWishlist();
               const errorData = await deleteResponse.json();
               alert(errorData.error || 'Failed to remove from wishlist');
+            } else {
+              if (onToggle) onToggle();
             }
           }
         }
@@ -68,18 +84,28 @@ export default function AddToWishlistButton({
         });
 
         if (response.ok) {
-          setInWishlist(true);
           if (onToggle) onToggle();
         } else {
           const data = await response.json();
           if (response.status === 409) {
-            setInWishlist(true);
+            // Already in wishlist - keep the optimistic update
+            if (onToggle) onToggle();
           } else {
+            // Revert on error
+            setInWishlist(false);
+            decrementWishlist();
             alert(data.error || 'Failed to add to wishlist');
           }
         }
       }
     } catch (error) {
+      // Revert on error
+      setInWishlist(previousState);
+      if (previousState) {
+        incrementWishlist();
+      } else {
+        decrementWishlist();
+      }
       console.error('Error toggling wishlist:', error);
       alert('An error occurred. Please try again.');
     } finally {
