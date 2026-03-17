@@ -21,7 +21,6 @@ interface NewStaffData {
 
 const ROLES = [
   { value: 'admin', label: 'Admin', description: 'Full access to all features' },
-  { value: 'manager', label: 'Manager', description: 'Access to products, categories, orders, customers' },
   { value: 'staff', label: 'Staff', description: 'Limited access to specific modules' },
 ];
 
@@ -149,8 +148,6 @@ export default function StaffManagementPage() {
     switch (role) {
       case 'admin':
         return 'bg-gray-100 text-accent border-accent';
-      case 'manager':
-        return 'bg-gray-100 text-primary border-primary';
       case 'staff':
         return 'bg-green-100 text-green-700 border-green-200';
       default:

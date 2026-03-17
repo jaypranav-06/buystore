@@ -17,11 +17,6 @@ export async function DELETE(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Only admins can remove staff
-  if (admin.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
-
   const { id } = await params;
   const staffId = parseInt(id);
 
@@ -29,9 +24,11 @@ export async function DELETE(
     return NextResponse.json({ error: 'Invalid staff ID' }, { status: 400 });
   }
 
+  const adminId = parseInt(session.user.id);
+
   try {
     // Prevent deleting yourself
-    if (staffId === admin.id) {
+    if (staffId === adminId) {
       return NextResponse.json(
         { error: 'Cannot delete your own account' },
         { status: 400 }

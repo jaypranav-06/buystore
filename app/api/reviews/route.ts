@@ -110,6 +110,7 @@ export async function POST(request: NextRequest) {
         images: images || [],
         is_approved: false, // Reviews need admin approval
         is_verified_purchase: isVerifiedPurchase,
+        updated_at: new Date(),
       },
       include: {
         user: {

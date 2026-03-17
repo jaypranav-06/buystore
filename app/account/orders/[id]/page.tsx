@@ -8,7 +8,7 @@ import prisma from '@/lib/db/prisma';
 async function getOrderDetails(orderId: number, userId: number) {
   const order = await prisma.paymentOrder.findFirst({
     where: {
-      id: orderId,
+      order_id: orderId,
       user_id: userId,
     },
     include: {
@@ -36,14 +36,15 @@ async function getOrderDetails(orderId: number, userId: number) {
   return order;
 }
 
-export default async function OrderDetailPage({ params }: { params: { id: string } }) {
+export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session?.user) {
     redirect('/signin?redirect=/account/orders');
   }
 
-  const orderId = parseInt(params.id);
+  const { id } = await params;
+  const orderId = parseInt(id);
   if (isNaN(orderId)) {
     notFound();
   }
@@ -221,16 +222,16 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
-                  <span>Rs {Number(order.shipping_cost || 0).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span>Rs {Number(order.shipping || 0).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Tax</span>
-                  <span>Rs {Number(order.tax_amount || 0).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span>Rs {Number(order.tax || 0).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
-                {order.discount_amount && Number(order.discount_amount) > 0 && (
+                {order.discount && Number(order.discount) > 0 && (
                   <div className="flex justify-between text-success">
                     <span>Discount</span>
-                    <span>-Rs {Number(order.discount_amount).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span>-Rs {Number(order.discount).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                 )}
                 <div className="border-t pt-3">

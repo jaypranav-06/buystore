@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate role
-    if (!['admin', 'manager', 'staff'].includes(role)) {
+    if (!['admin', 'staff'].includes(role)) {
       return NextResponse.json(
         { error: 'Invalid role' },
         { status: 400 }
@@ -119,6 +119,7 @@ export async function POST(request: NextRequest) {
         email,
         password_hash: passwordHash,
         role,
+        updated_at: new Date(),
       },
       select: {
         admin_id: true,

@@ -3,7 +3,8 @@ import prisma from '@/lib/db/prisma';
 import { z } from 'zod';
 
 const contactSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   subject: z.string().min(1, 'Subject is required'),
   message: z.string().min(10, 'Message must be at least 10 characters'),
@@ -16,11 +17,13 @@ export async function POST(request: NextRequest) {
 
     const contact = await prisma.contact.create({
       data: {
-        name: validatedData.name,
+        first_name: validatedData.firstName,
+        last_name: validatedData.lastName,
         email: validatedData.email,
         subject: validatedData.subject,
         message: validatedData.message,
         status: 'new',
+        updated_at: new Date(),
       },
     });
 
@@ -38,7 +41,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: error.errors[0].message },
+        { error: error.issues[0].message },
         { status: 400 }
       );
     }

@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
         image_url,
         is_active: is_active !== undefined ? is_active : true,
         is_featured: is_featured !== undefined ? is_featured : false,
+        updated_at: new Date(),
       },
     });
 

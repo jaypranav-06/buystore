@@ -219,7 +219,7 @@ export default async function AccountPage() {
               ) : (
                 <div className="space-y-4">
                   {recentOrders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-4 hover:border-accent transition">
+                    <div key={order.order_id} className="border rounded-lg p-4 hover:border-accent transition">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <p className="font-semibold text-gray-900">Order #{order.order_number}</p>
@@ -252,7 +252,7 @@ export default async function AccountPage() {
                         <div className="flex items-center gap-3">
                           <p className="font-bold text-gray-900">Rs {Number(order.total).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                           <Link
-                            href={`/account/orders/${order.id}`}
+                            href={`/account/orders/${order.order_id}`}
                             className="text-primary hover:text-primary-light text-sm font-semibold"
                           >
                             View Details

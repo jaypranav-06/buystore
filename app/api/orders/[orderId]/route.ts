@@ -5,7 +5,7 @@ import prisma from '@/lib/db/prisma';
 // GET /api/orders/[orderId] - Get single order by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
     const session = await auth();
@@ -18,7 +18,8 @@ export async function GET(
     }
 
     const userId = parseInt(session.user.id);
-    const orderId = parseInt(params.orderId);
+    const { orderId: orderIdParam } = await params;
+    const orderId = parseInt(orderIdParam);
 
     if (isNaN(orderId)) {
       return NextResponse.json(

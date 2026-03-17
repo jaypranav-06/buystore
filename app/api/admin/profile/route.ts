@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const adminData = await prisma.adminUser.findUnique({
-      where: { admin_id: admin.id },
+      where: { admin_id: parseInt(session.user.id) },
       select: {
         admin_id: true,
         username: true,
@@ -57,12 +57,23 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { username, email } = body;
 
+    const adminId = parseInt(session.user.id);
+
+    // Get current admin data
+    const currentAdmin = await prisma.adminUser.findUnique({
+      where: { admin_id: adminId },
+    });
+
+    if (!currentAdmin) {
+      return NextResponse.json({ error: 'Admin not found' }, { status: 404 });
+    }
+
     // Check if email is already taken by another admin
-    if (email && email !== admin.email) {
+    if (email && email !== currentAdmin.email) {
       const existingAdmin = await prisma.adminUser.findFirst({
         where: {
           email,
-          admin_id: { not: admin.id },
+          admin_id: { not: adminId },
         },
       });
 
@@ -76,10 +87,10 @@ export async function PUT(request: NextRequest) {
 
     // Update admin profile
     const updatedAdmin = await prisma.adminUser.update({
-      where: { admin_id: admin.id },
+      where: { admin_id: adminId },
       data: {
-        username: username || admin.username,
-        email: email || admin.email,
+        username: username || currentAdmin.username,
+        email: email || currentAdmin.email,
       },
       select: {
         admin_id: true,

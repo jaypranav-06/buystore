@@ -95,7 +95,7 @@ export default async function AdminOrdersPage() {
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr key={order.id} className="border-b border-gray-100 hover:bg-gray-50">
+                  <tr key={order.order_id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-4 px-6 font-semibold text-gray-900 text-sm">
                       {order.order_number}
                     </td>
@@ -148,7 +148,7 @@ export default async function AdminOrdersPage() {
                     </td>
                     <td className="py-4 px-6">
                       <Link
-                        href={`/admin/orders/${order.id}`}
+                        href={`/admin/orders/${order.order_id}`}
                         className="inline-flex items-center gap-1 text-primary hover:text-primary-light font-semibold text-sm"
                       >
                         <Eye className="w-4 h-4" />

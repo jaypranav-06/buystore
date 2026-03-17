@@ -18,10 +18,11 @@ export default async function AdminLayout({
   }
 
   const admin = {
-    admin_id: parseInt(session.user.id),
+    id: parseInt(session.user.id),
     username: session.user.name || 'Admin',
     email: session.user.email || '',
     role: session.user.role,
+    type: 'admin' as const,
   };
 
   return (

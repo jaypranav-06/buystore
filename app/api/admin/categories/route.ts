@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
       data: {
         category_name,
         description,
+        updated_at: new Date(),
       },
     });
 

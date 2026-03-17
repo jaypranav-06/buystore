@@ -6,7 +6,7 @@ async function getCustomers() {
   const customers = await prisma.user.findMany({
     orderBy: { created_at: 'desc' },
     include: {
-      orders: {
+      payment_orders: {
         select: {
           order_id: true,
           total: true,
@@ -24,7 +24,7 @@ export default async function CustomersPage() {
 
   const stats = {
     total: customers.length,
-    withOrders: customers.filter((c) => c.orders.length > 0).length,
+    withOrders: customers.filter((c) => c.payment_orders.length > 0).length,
     newThisMonth: customers.filter(
       (c) =>
         new Date(c.created_at).getMonth() === new Date().getMonth() &&
@@ -89,7 +89,7 @@ export default async function CustomersPage() {
               </thead>
               <tbody>
                 {customers.map((customer) => {
-                  const totalSpent = customer.orders.reduce(
+                  const totalSpent = customer.payment_orders.reduce(
                     (sum, order) => sum + Number(order.total),
                     0
                   );
@@ -132,7 +132,7 @@ export default async function CustomersPage() {
                         <div className="flex items-center gap-2">
                           <ShoppingBag className="w-4 h-4 text-gray-500" />
                           <span className="font-semibold text-gray-900">
-                            {customer.orders.length}
+                            {customer.payment_orders.length}
                           </span>
                         </div>
                       </td>
