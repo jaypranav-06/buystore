@@ -27,7 +27,7 @@ model CartItem {
   quantity   Int
   item_type  String   @default("cart")
   created_at DateTime @default(now())
-  updated_at DateTime
+  updated_at DateTime @updatedAt
   product    Product  @relation(fields: [product_id], references: [product_id])
   user       User     @relation(fields: [user_id], references: [user_id])
 
