@@ -9,16 +9,21 @@ interface Category {
   category_name: string;
 }
 
+interface TrendingCategory {
+  id: number;
+  name: string;
+}
+
 export default function HomeSearchBar() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
+  const [trendingCategories, setTrendingCategories] = useState<TrendingCategory[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    fetchTrendingSearches();
+    fetchTrendingCategories();
   }, []);
 
-  const fetchTrendingSearches = async () => {
+  const fetchTrendingCategories = async () => {
     try {
       const response = await fetch('/api/categories');
       const data = await response.json();
@@ -27,13 +32,18 @@ export default function HomeSearchBar() {
         // Get first 4 active categories as trending searches
         const trending = data.categories
           .slice(0, 4)
-          .map((cat: Category) => cat.category_name);
-        setTrendingSearches(trending);
+          .map((cat: Category) => ({ id: cat.category_id, name: cat.category_name }));
+        setTrendingCategories(trending);
       }
     } catch (error) {
-      console.error('Error fetching trending searches:', error);
-      // Fallback to default trending searches
-      setTrendingSearches(['Clothing', 'Shoes', 'Accessories', 'Jewelry']);
+      console.error('Error fetching trending categories:', error);
+      // Fallback to default trending searches (without IDs, will use text search)
+      setTrendingCategories([
+        { id: 0, name: 'Clothing' },
+        { id: 0, name: 'Shoes' },
+        { id: 0, name: 'Accessories' },
+        { id: 0, name: 'Jewelry' }
+      ]);
     }
   };
 
@@ -44,8 +54,14 @@ export default function HomeSearchBar() {
     }
   };
 
-  const handleTrendingClick = (term: string) => {
-    router.push(`/products?search=${encodeURIComponent(term)}`);
+  const handleTrendingClick = (category: TrendingCategory) => {
+    // Use category filter instead of text search
+    if (category.id > 0) {
+      router.push(`/products?category=${category.id}`);
+    } else {
+      // Fallback to text search if no ID
+      router.push(`/products?search=${encodeURIComponent(category.name)}`);
+    }
   };
 
   return (
@@ -75,13 +91,13 @@ export default function HomeSearchBar() {
           <TrendingUp className="w-4 h-4" />
           <span>Trending:</span>
         </div>
-        {trendingSearches.map((term) => (
+        {trendingCategories.map((category) => (
           <button
-            key={term}
-            onClick={() => handleTrendingClick(term)}
+            key={category.id || category.name}
+            onClick={() => handleTrendingClick(category)}
             className="px-4 py-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white text-sm rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105"
           >
-            {term}
+            {category.name}
           </button>
         ))}
       </div>
