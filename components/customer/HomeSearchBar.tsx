@@ -1,12 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, TrendingUp } from 'lucide-react';
 
+interface Category {
+  category_id: number;
+  category_name: string;
+}
+
 export default function HomeSearchBar() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    fetchTrendingSearches();
+  }, []);
+
+  const fetchTrendingSearches = async () => {
+    try {
+      const response = await fetch('/api/categories');
+      const data = await response.json();
+
+      if (data.success && data.categories) {
+        // Get first 4 active categories as trending searches
+        const trending = data.categories
+          .slice(0, 4)
+          .map((cat: Category) => cat.category_name);
+        setTrendingSearches(trending);
+      }
+    } catch (error) {
+      console.error('Error fetching trending searches:', error);
+      // Fallback to default trending searches
+      setTrendingSearches(['Clothing', 'Shoes', 'Accessories', 'Jewelry']);
+    }
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,8 +43,6 @@ export default function HomeSearchBar() {
       router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
-
-  const trendingSearches = ['T-Shirts', 'Sneakers', 'Jeans', 'Dresses'];
 
   const handleTrendingClick = (term: string) => {
     router.push(`/products?search=${encodeURIComponent(term)}`);
