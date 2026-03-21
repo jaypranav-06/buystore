@@ -135,7 +135,13 @@ function ProductsPageContent() {
               Discover Amazing Products
             </h1>
             <p className="text-gray-600 text-center mb-6">
-              {products.length > 0 ? `${products.length} products available` : 'Find your perfect match'}
+              {products.length > 0 ? (
+                <>
+                  {products.length} {products.length === 1 ? 'product' : 'products'} found
+                  {searchQuery && ` for "${searchQuery}"`}
+                  {selectedCategory && categories.length > 0 && ` in ${categories.find(c => String(c.category_id) === selectedCategory)?.category_name || 'selected category'}`}
+                </>
+              ) : 'Find your perfect match'}
             </p>
 
             {/* Enhanced Search Bar */}
@@ -240,9 +246,14 @@ function ProductsPageContent() {
 
               {/* Categories */}
               <div className="mb-6 pb-6 border-b border-gray-200">
-                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Categories
                 </label>
+                {searchQuery && (
+                  <p className="text-xs text-gray-500 mb-3">
+                    Filter search results by category
+                  </p>
+                )}
                 <div className="space-y-2.5">
                   <label className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
                     <input
