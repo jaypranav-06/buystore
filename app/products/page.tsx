@@ -293,7 +293,7 @@ function ProductsPageContent() {
                       onChange={(e) => setShowFeatured(e.target.checked)}
                       className="w-4 h-4 text-accent border-gray-300 rounded focus:ring-accent"
                     />
-                    <span className="text-sm text-gray-700">Featured ⭐</span>
+                    <span className="text-sm text-gray-700">Featured</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
                     <input
@@ -302,7 +302,7 @@ function ProductsPageContent() {
                       onChange={(e) => setShowNewArrivals(e.target.checked)}
                       className="w-4 h-4 text-accent border-gray-300 rounded focus:ring-accent"
                     />
-                    <span className="text-sm text-gray-700">New Arrivals 🆕</span>
+                    <span className="text-sm text-gray-700">New Arrivals</span>
                   </label>
                   <label className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
                     <input
@@ -311,7 +311,7 @@ function ProductsPageContent() {
                       onChange={(e) => setShowBestsellers(e.target.checked)}
                       className="w-4 h-4 text-accent border-gray-300 rounded focus:ring-accent"
                     />
-                    <span className="text-sm text-gray-700">Bestsellers 🔥</span>
+                    <span className="text-sm text-gray-700">Bestsellers</span>
                   </label>
                 </div>
               </div>
