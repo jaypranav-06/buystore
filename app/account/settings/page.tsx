@@ -287,7 +287,7 @@ export default function SettingsPage() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
-                      placeholder="+94 77 123 4567"
+                      placeholder="+94 75 907 3302"
                     />
                   </div>
                 </div>

@@ -349,7 +349,7 @@ export default function CheckoutPage() {
                     <input
                       type="tel"
                       required
-                      placeholder="+94 77 123 4567"
+                      placeholder="+94 75 907 3302"
                       value={shippingData.phone}
                       onChange={(e) => setShippingData({ ...shippingData, phone: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"

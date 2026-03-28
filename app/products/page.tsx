@@ -397,8 +397,8 @@ function ProductCard({ product }: { product: Product }) {
   const originalPrice = product.discount_price ? Number(product.price) : null;
 
   return (
-    <div className="group">
-      <div className="bg-white rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden">
+    <div className="group h-full">
+      <div className="bg-white rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col h-full">
         <Link href={`/products/${product.product_id}`} className="block">
           <div className="relative aspect-square">
             {product.image_url ? (
@@ -425,12 +425,12 @@ function ProductCard({ product }: { product: Product }) {
             )}
           </div>
         </Link>
-        <div className="p-4">
+        <div className="p-4 flex flex-col flex-1">
           <Link href={`/products/${product.product_id}`} className="block">
-            <p className="text-sm text-gray-500 mb-1">{product.category?.category_name}</p>
+            <p className="text-sm text-gray-500 mb-1 truncate">{product.category?.category_name}</p>
             <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="font-semibold text-gray-800 line-clamp-2 flex-1">
-                {product.product_name}
+              <h3 className="font-semibold text-gray-800 flex-1 min-h-[3rem]" title={product.product_name}>
+                <span className="line-clamp-2">{product.product_name}</span>
               </h3>
               <div onClick={(e) => e.preventDefault()} className="flex-shrink-0 -mt-1">
                 <AddToWishlistButton
@@ -440,7 +440,7 @@ function ProductCard({ product }: { product: Product }) {
               </div>
             </div>
           </Link>
-          <Link href={`/products/${product.product_id}`} className="block">
+          <Link href={`/products/${product.product_id}`} className="block mt-auto">
             <div className="flex items-center gap-2 mb-2">
               <div className="flex text-yellow-400">
                 {[...Array(5)].map((_, i) => (
@@ -453,12 +453,12 @@ function ProductCard({ product }: { product: Product }) {
               </div>
               <span className="text-xs text-gray-500">({product.review_count})</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-gray-800">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-lg font-bold text-gray-800 whitespace-nowrap">
                 Rs {price.toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
               {originalPrice && (
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-sm text-gray-500 line-through whitespace-nowrap">
                   Rs {originalPrice.toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               )}
